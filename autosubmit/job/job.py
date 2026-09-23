@@ -40,8 +40,6 @@ from bscearth.utils.date import (
 
 from autosubmit.config.basicconfig import BasicConfig
 from autosubmit.helpers.enums import ChunkUnit
-from autosubmit.helpers.parameters import autosubmit_parameter
-from autosubmit.history.data_classes.job_data import JobData
 from autosubmit.history.database_managers.experiment_history_db_manager import (
     get_last_run_id,
 )
@@ -61,6 +59,7 @@ from autosubmit.platforms.platform_type import PlatformType
 
 if TYPE_CHECKING:
     from autosubmit.config.configcommon import AutosubmitConfig
+    from autosubmit.job.job import Job
     from autosubmit.job.template import TemplateSnippet
     from autosubmit.platforms.platform import Platform
 
@@ -343,7 +342,6 @@ class Job:
         self._queue = None
         self._partition = None
         self.retry_delay = None
-        #: (str): Type of the job, as given on job configuration file. (job: TASKTYPE)
         self._section: str | None = None
         self._wallclock: str | None = None
         self.wchunkinc = None
@@ -583,9 +581,11 @@ class Job:
         self.finished_time = None
 
     @property  # type: ignore
-    @autosubmit_parameter(name='x11')
     def x11(self):
-        """Whether to use X11 forwarding"""
+        """Whether to use X11 forwarding
+
+        :autosubmit-group: JOB
+        """
         return self._x11
 
     @x11.setter
@@ -593,9 +593,11 @@ class Job:
         self._x11 = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='x11_options')
     def x11_options(self):
-        """Allows to set salloc parameters for x11"""
+        """Allows to set salloc parameters for x11
+
+        :autosubmit-group: JOB
+        """
         return self._x11_options
 
     @x11_options.setter
@@ -603,9 +605,11 @@ class Job:
         self._x11_options = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='tasktype')
     def section(self):
-        """Type of the job, as given on job configuration file."""
+        """Type of the job, as given on job configuration file.
+
+        :autosubmit-group: JOB
+        """
         return self._section
 
     @section.setter
@@ -613,9 +617,11 @@ class Job:
         self._section = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='jobname')
     def name(self):
-        """Current job full name."""
+        """Current job full name.
+
+        :autosubmit-group: JOB
+        """
         return self._name
 
     @name.setter
@@ -623,9 +629,11 @@ class Job:
         self._name = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='script')
     def script(self):
-        """Allows to launch inline code instead of using the file parameter"""
+        """Allows to launch inline code instead of using the file parameter
+
+        :autosubmit-group: JOB
+        """
         return self._script
 
     @script.setter
@@ -633,9 +641,11 @@ class Job:
         self._script = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='fail_count')
     def fail_count(self):
-        """Number of failed attempts to run this job."""
+        """Number of failed attempts to run this job.
+
+        :autosubmit-group: JOB
+        """
         return self._fail_count
 
     @fail_count.setter
@@ -643,9 +653,11 @@ class Job:
         self._fail_count = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='retrials')
     def retrials(self):
-        """Max amount of retrials to run this job."""
+        """Max amount of retrials to run this job.
+
+        :autosubmit-group: JOB
+        """
         return self._retrials
 
     @retrials.setter
@@ -654,9 +666,11 @@ class Job:
             self._retrials = int(value)
 
     @property  # type: ignore
-    @autosubmit_parameter(name='checkpoint')
     def checkpoint(self):
-        """Generates a checkpoint step for this job based on job.type."""
+        """Generates a checkpoint step for this job based on job.type.
+
+        :autosubmit-group: JOB
+        """
         return self.type.checkpoint
 
     def get_checkpoint_files(self):
@@ -664,15 +678,19 @@ class Job:
         return self.platform.get_checkpoint_files(self)
 
     @property  # type: ignore
-    @autosubmit_parameter(name='sdate')
     def sdate(self):
-        """Current start date."""
+        """Current start date.
+
+        :autosubmit-group: JOB
+        """
         return date2str(self.date, self.date_format)
 
     @property  # type: ignore
-    @autosubmit_parameter(name='member')
     def member(self):
-        """Current member."""
+        """Current member.
+
+        :autosubmit-group: JOB
+        """
         return self._member
 
     @member.setter
@@ -680,9 +698,11 @@ class Job:
         self._member = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='chunk')
     def chunk(self):
-        """Current chunk."""
+        """Current chunk.
+
+        :autosubmit-group: JOB
+        """
         return self._chunk
 
     @chunk.setter
@@ -690,9 +710,11 @@ class Job:
         self._chunk = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='split')
     def split(self):
-        """Current split."""
+        """Current split.
+
+        :autosubmit-group: JOB
+        """
         return self._split
 
     @split.setter
@@ -700,9 +722,11 @@ class Job:
         self._split = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='delay')
     def delay(self):
-        """Current delay."""
+        """Current delay.
+
+        :autosubmit-group: JOB
+        """
         return self._delay
 
     @delay.setter
@@ -710,9 +734,11 @@ class Job:
         self._delay = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='wallclock')
     def wallclock(self):
-        """Duration for which nodes used by job will remain allocated."""
+        """Duration for which nodes used by job will remain allocated.
+
+        :autosubmit-group: JOB
+        """
         return self._wallclock
 
     @wallclock.setter
@@ -726,9 +752,11 @@ class Job:
                 self._wallclock_in_seconds = self._time_in_seconds_and_margin(wallclock_parsed)
 
     @property  # type: ignore
-    @autosubmit_parameter(name='hyperthreading')
     def hyperthreading(self):
-        """Detects if hyperthreading is enabled or not."""
+        """Detects if hyperthreading is enabled or not.
+
+        :autosubmit-group: JOB
+        """
         return self._hyperthreading
 
     @hyperthreading.setter
@@ -736,9 +764,11 @@ class Job:
         self._hyperthreading = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='nodes')
     def nodes(self):
-        """Number of nodes that the job will use."""
+        """Number of nodes that the job will use.
+
+        :autosubmit-group: JOB
+        """
         return self._nodes
 
     @nodes.setter
@@ -746,9 +776,11 @@ class Job:
         self._nodes = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name=['numthreads', 'threads', 'cpus_per_task'])
     def threads(self):
-        """Number of threads that the job will use."""
+        """Number of threads that the job will use.
+
+        :autosubmit-group: JOB
+        """
         return self._threads
 
     @threads.setter
@@ -756,9 +788,11 @@ class Job:
         self._threads = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name=['numtask', 'tasks', 'tasks_per_node'])
     def tasks(self):
-        """Number of tasks that the job will use."""
+        """Number of tasks that the job will use.
+
+        :autosubmit-group: JOB
+        """
         return self._tasks
 
     @tasks.setter
@@ -766,9 +800,11 @@ class Job:
         self._tasks = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='scratch_free_space')
     def scratch_free_space(self):
-        """Percentage of free space required on the ``scratch``."""
+        """Percentage of free space required on the ``scratch``.
+
+        :autosubmit-group: JOB
+        """
         return self._scratch_free_space
 
     @scratch_free_space.setter
@@ -776,9 +812,11 @@ class Job:
         self._scratch_free_space = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='memory')
     def memory(self):
-        """Memory requested for the job."""
+        """Memory requested for the job.
+
+        :autosubmit-group: JOB
+        """
         return self._memory
 
     @memory.setter
@@ -786,9 +824,11 @@ class Job:
         self._memory = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='memory_per_task')
     def memory_per_task(self):
-        """Memory requested per task."""
+        """Memory requested per task.
+
+        :autosubmit-group: JOB
+        """
         return self._memory_per_task
 
     @memory_per_task.setter
@@ -796,9 +836,11 @@ class Job:
         self._memory_per_task = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='frequency')
     def frequency(self):
-        """TODO."""
+        """TODO.
+
+        :autosubmit-group: JOB
+        """
         return self._frequency
 
     @frequency.setter
@@ -806,9 +848,11 @@ class Job:
         self._frequency = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='synchronize')
     def synchronize(self):
-        """TODO."""
+        """TODO.
+
+        :autosubmit-group: JOB
+        """
         return self._synchronize
 
     @synchronize.setter
@@ -816,9 +860,11 @@ class Job:
         self._synchronize = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='dependencies')
     def dependencies(self):
-        """Current job dependencies."""
+        """Current job dependencies.
+
+        :autosubmit-group: JOB
+        """
         return self._dependencies
 
     @dependencies.setter
@@ -826,9 +872,11 @@ class Job:
         self._dependencies = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='delay_retrials')
     def delay_retrials(self):
-        """TODO"""
+        """TODO
+
+        :autosubmit-group: JOB
+        """
         return self._delay_retrials
 
     @delay_retrials.setter
@@ -836,9 +884,11 @@ class Job:
         self._delay_retrials = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='packed')
     def packed(self):
-        """TODO"""
+        """TODO
+
+        :autosubmit-group: JOB
+        """
         return self._packed
 
     @packed.setter
@@ -846,9 +896,11 @@ class Job:
         self._packed = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='export')
     def export(self):
-        """TODO."""
+        """TODO.
+
+        :autosubmit-group: JOB
+        """
         return self._export
 
     @export.setter
@@ -856,9 +908,11 @@ class Job:
         self._export = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='custom_directives')
     def custom_directives(self):
-        """List of custom directives."""
+        """List of custom directives.
+
+        :autosubmit-group: JOB
+        """
         return self._custom_directives
 
     @custom_directives.setter
@@ -866,9 +920,11 @@ class Job:
         self._custom_directives = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='splits')
     def splits(self):
-        """Max number of splits."""
+        """Max number of splits.
+
+        :autosubmit-group: JOB
+        """
         return self._splits
 
     @splits.setter
@@ -876,9 +932,11 @@ class Job:
         self._splits = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name='notify_on')
     def notify_on(self):
-        """Send mail notification on job status change."""
+        """Send mail notification on job status change.
+
+        :autosubmit-group: CHUNK
+        """
         return self._notify_on
 
     @notify_on.setter
@@ -886,9 +944,11 @@ class Job:
         self._notify_on = value
 
     @property
-    @autosubmit_parameter(name='cpmip_thresholds')
     def cpmip_thresholds(self):
-        """Thresholds for CPMIP metrics."""
+        """Thresholds for CPMIP metrics.
+
+        :autosubmit-group: JOB
+        """
         return self._cpmip_thresholds
 
     @cpmip_thresholds.setter
@@ -896,9 +956,11 @@ class Job:
         self._cpmip_thresholds = value
 
     @property
-    @autosubmit_parameter(name='chunk_size')
     def chunk_size(self):
-        """Chunk size used to compute CPMIP metrics."""
+        """Chunk size used to compute CPMIP metrics.
+
+        :autosubmit-group: JOB
+        """
         return self._chunk_size
 
     @chunk_size.setter
@@ -906,9 +968,11 @@ class Job:
         self._chunk_size = value
 
     @property
-    @autosubmit_parameter(name='chunk_size_unit')
     def chunk_size_unit(self):
-        """Chunk size unit used to compute CPMIP metrics."""
+        """Chunk size unit used to compute CPMIP metrics.
+
+        :autosubmit-group: JOB
+        """
         return self._chunk_size_unit
 
     @chunk_size_unit.setter
@@ -916,9 +980,11 @@ class Job:
         self._chunk_size_unit = value
 
     @property
-    @autosubmit_parameter(name='validate_template')
     def validate_template(self):
-        """Whether to print validate information about the job."""
+        """Whether to print validate information about the job.
+
+        :autosubmit-group: JOB
+        """
         return self._validate_template
 
     @validate_template.setter
@@ -1005,8 +1071,11 @@ class Job:
         self._parents = parents
 
     @property  # type: ignore
-    @autosubmit_parameter(name='status')
     def status(self):
+        """Sets the status of the job
+
+        :autosubmit-group: CHUNK
+        """
         return self._status
 
     @status.setter
@@ -1048,10 +1117,10 @@ class Job:
         self._platform = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name="current_queue")
     def queue(self) -> "Platform | str":
         """Returns the queue to be used by the job. Chooses between serial and parallel platforms.
 
+        :autosubmit-group: JOB
         :return HPCPlatform object for the job to use
         """
         if self._queue is not None and len(str(self._queue)) > 0:
@@ -1071,7 +1140,7 @@ class Job:
 
     @property  # type: ignore
     def partition(self) -> "Platform | str":
-        """Returns the queue to be used by the job. Chooses between serial and parallel platforms
+        """Returns the partition to be used by the job. Chooses between serial and parallel platforms
 
         :return HPCPlatform object for the job to use
         """
@@ -1175,9 +1244,11 @@ class Job:
         return 0
 
     @property  # type: ignore
-    @autosubmit_parameter(name=['numproc', 'processors'])
     def processors(self):
-        """Number of processors that the job will use."""
+        """Number of processors that the job will use.
+
+        :autosubmit-group: JOB
+        """
         return self._processors
 
     @processors.setter
@@ -1185,9 +1256,11 @@ class Job:
         self._processors = value
 
     @property  # type: ignore
-    @autosubmit_parameter(name=['processors_per_node'])
     def processors_per_node(self):
-        """Number of processors per node that the job can use."""
+        """Number of processors per node that the job can use.
+
+        :autosubmit-group: JOB
+        """
         return self._processors_per_node
 
     @processors_per_node.setter
@@ -3015,7 +3088,7 @@ class Job:
         else:
             return False
 
-    def is_parent(self, job):
+    def is_parent(self, job: 'Job'):
         """Check if the given job is a parent
 
         :param job: job to be checked if is a parent
@@ -3023,11 +3096,11 @@ class Job:
         """
         return job in self.parents
 
-    def is_ancestor(self, job):
+    def is_ancestor(self, job: 'Job') -> bool:
         """Check if the given job is an ancestor
+
         :param job: job to be checked if is an ancestor
         :return: True if job is an ancestor, false otherwise
-        :rtype bool
         """
         for parent in list(self.parents):
             if parent.is_parent(job) or parent.is_ancestor(job):
