@@ -578,7 +578,8 @@ class ParamikoPlatform(Platform):
                 else:
                     self.transport.close()
                     raise SSHException
-            self.transport.set_keepalive(ssh_keepalive)
+            if self.transport is not None:
+                self.transport.set_keepalive(ssh_keepalive)
             self._ftpChannel = paramiko.SFTPClient.from_transport(self.transport, window_size=pow(4, 12),
                                                                   max_packet_size=pow(4, 12))
             self._ftpChannel.get_channel().settimeout(120)
